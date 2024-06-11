@@ -24,20 +24,19 @@ export default function Home() {
     setLoading(false);
   };
 
-  const fetchTopTrending = async () => {
-    setLoading(true);
-    await axios.get(`https://animes-five.vercel.app/meta/anilist/trending`, {
-      params: {
-        page: page,
-        perPage: 20
-      }
-    }).then((res: any) => {
-      setAnimes(res.data.results);
-    })
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchTopTrending = async () => {
+      setLoading(true);
+      await axios.get(`https://animes-five.vercel.app/meta/anilist/trending`, {
+        params: {
+          page: page,
+          perPage: 20
+        }
+      }).then((res: any) => {
+        setAnimes(res.data.results);
+      })
+      setLoading(false);
+    };
     fetchTopTrending()
   }, [page]);
 

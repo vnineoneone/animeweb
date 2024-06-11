@@ -4,7 +4,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from 'next/navigation';
 import ReactPlayer from 'react-player'
 import parse from 'html-react-parser';
 // import LinesEllipsis from 'react-lines-ellipsis'
@@ -23,13 +23,7 @@ export default function WatchMovie() {
     useEffect(() => {
         setIsClient(true)
     }, [])
-    const data = async () => {
-        await axios.get(`https://animes-five.vercel.app/meta/anilist/info/${search.get('id')}`, { params: { provider: "gogoanime" } }).then((res: any) => {
-            setInfo(res.data);
-        }).catch((err) => {
-            console.log(err)
-        })
-    };
+
     const watch = async (episodeId: string) => {
         await axios.get(`https://animes-five.vercel.app/meta/anilist/watch/${episodeId}`).then((res: any) => {
             setUrl(res.data.sources[0]?.url);
@@ -39,8 +33,15 @@ export default function WatchMovie() {
     };
 
     useEffect(() => {
+        const data = async () => {
+            await axios.get(`https://animes-five.vercel.app/meta/anilist/info/${search.get('id')}`, { params: { provider: "gogoanime" } }).then((res: any) => {
+                setInfo(res.data);
+            }).catch((err) => {
+                console.log(err)
+            })
+        };
         data()
-    }, []);
+    }, [search]);
 
     return (
         <div className="">
