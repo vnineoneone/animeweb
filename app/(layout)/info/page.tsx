@@ -17,8 +17,7 @@ export default function WatchMovie() {
     const [url, setUrl] = useState('/');
     const [isClient, setIsClient] = useState(false)
     const [loading, setLoading] = useState(true);
-    const id = search.get('id') || ''
-    const episodeId = search.get('episode') || ''
+
     function formatDate(day: number, month: number, year: number) {
         if (!day)
             return `${month}/${year}`
@@ -28,28 +27,26 @@ export default function WatchMovie() {
         setIsClient(true)
     }, [])
 
+    const watch = async (episodeId: string) => {
+        await axios.get(`https://animes-five.vercel.app/meta/anilist/watch/${episodeId}`).then((res: any) => {
+            setUrl(res.data.sources[0]?.url);
+        }).catch((err) => {
+            console.log(err)
+        })
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             // setLoading(true);
-            if (episodeId !== '') {
-                await axios.get(`https://animes-five.vercel.app/meta/anilist/watch/${episodeId}`).then((res: any) => {
-                    setUrl(res.data.sources[0]?.url);
-                }).catch((err) => {
-                    console.log(err)
-                })
-            }
-            if (id !== '') {
-                await axios.get(`https://animes-five.vercel.app/meta/anilist/info/${id}`, { params: { provider: "gogoanime" } }).then((res: any) => {
-                    setInfo(res.data);
-                }).catch((err) => {
-                    console.log(err)
-                })
-            }
+            await axios.get(`https://animes-five.vercel.app/meta/anilist/info/${search.get('id')}`, { params: { provider: "gogoanime" } }).then((res: any) => {
+                setInfo(res.data);
+            }).catch((err) => {
+                console.log(err)
+            })
             setLoading(false);
         };
         fetchData()
-    }, [episodeId, id]);
+    }, [search]);
 
     return (
         <div className="">
@@ -60,25 +57,7 @@ export default function WatchMovie() {
                     </div>
                     :
                     <div>
-                        {
-                            isClient && <div className="flex justify-center items-center w-full pt-5 h-auto">
-                                <ReactPlayer url={url} controls width={1024} height={576} className="" />
-                            </div>
-                        }
 
-                        <div className="mt-10 px-10 py-5 my-10 bg-[#696969]">
-                            <div className="grid grid-cols-12 gap-3 w-7/12 p-4">
-                                {
-                                    info?.episodes?.map((episode: any) => (
-                                        <div key={episode.id} className="flex justify-center w-10 h-10 bg-slate-100 items-center p-2 border-[1px] border-slate-200 rounded-md">
-                                            <Link href={`/watch?id=${id}&episode=${episode.id}`} className="rounded-md font-bold">
-                                                {episode.number}
-                                            </Link>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
                         <div className="flex justify-center items-center">
                             <div className="relative overflow-hidden h-[calc(100vh-85px)] w-full bg-red-600 rounded-t-lg">
                                 <Image
@@ -91,14 +70,14 @@ export default function WatchMovie() {
                                 <div className="absolute inset-0 w-full h-full bg-slate-900 opacity-60 z-10">
                                 </div>
                                 <div className="relative z-20 flex justify-between items-center p-5 w-full">
-                                    <div className="mr-5 relative hover:opacity-90 w-1/4 h-[400px]">
-                                        {/* <div className="rounded-b-md absolute bottom-0 left-0 flex justify-center items-center w-full h-12 bg-red-500 text-white font-semibold z-10">
+                                    <Link href={`/watch?id=${info.id}&episode=${1}`} className="mr-5 relative hover:opacity-80 w-1/4 h-[400px]">
+                                        <div className="rounded-b-md absolute bottom-0 left-0 flex justify-center items-center w-full h-12 bg-red-500 text-white font-semibold z-10">
                                             XEM NGAY
-                                        </div> */}
+                                        </div>
                                         <div className="w-48 h-64">
                                             <Image fill src={info?.image} alt={'image'} className="rounded-md w-full h-full object-center object-cover overflow-hidden" />
                                         </div>
-                                    </div>
+                                    </Link>
                                     <div className="flex-1 text-white">
                                         <h1 className="text-2xl font-bold mb-5">{info?.title?.english}</h1>
                                         <div className="h-72 overflow-hidden border-b-[1px] border-slate-300">

@@ -44,15 +44,15 @@ export default function Home() {
   return (
     <div className="min-h-screen relative">
       <div className="">
-        <div className="py-10">
+        <div className="">
           {
             loading ?
               <div className="flex h-[calc(100vh-85px)] items-center justify-center bg-[#0f1416] dark:bg-black">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-red-500 border-primary border-t-transparent"></div>
               </div>
-              : <div className="grid grid-cols-5 gap-5 px-10 pb-20">
+              : <div className="grid grid-cols-5 gap-5 px-10 py-10 pb-32">
                 {animes?.map((anime: any) => (
-                  <Link href={`/watch/?id=${anime.id}`} key={anime.id} style={{ backgroundColor: `${anime.color}` }} className="p-1 rounded-lg">
+                  <Link href={`/info/?id=${anime.id}`} key={anime.id} style={{ backgroundColor: `${anime.color}` }} className="p-1 rounded-lg">
                     <div className="w-full h-[300px] relative shadow-lg overflow-hidden hover:opacity-90">
                       <div >
                         <Image fill src={anime.image} className={`rounded-lg object-fill h-full w-full hover:scale-125 hover:transition-all hover:ease-linear hover:duration-300 shadow-lg shadow-[${anime.color}]`} alt={""} />
